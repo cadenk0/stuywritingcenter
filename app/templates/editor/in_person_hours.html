@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% include "editor/navbar.html" %}
+{% block content %}
+
+<script>
+var tagCount = 0;
+
+function addTag() {
+	var tags = document.getElementById("tags");
+	var body = document.getElementById("tag_input");
+    var oldVal = body.value;
+
+	tags.innerHTML += `
+        <span class="tag is-light is-medium" id="tag-` + tagCount + `" style="margin-bottom: 5px;">
+        	<p>` + body.value + `</p>
+        	<button class="delete is-small" onclick="deleteTag(` + tagCount + `); return false;"></button>
+        </span>
+	`;
+
+	body.value = '';
+	tagCount++;
+
+    var tagList = document.getElementById('tagList').value.split(',');
+    if (tagList[0] == '') {
+        tagList = [];
+    }
+    tagList.push(oldVal);
+    document.getElementById('tagList').value = tagList.join(',');
+}
+
+function deleteTag(id) {
+	document.getElementById("tag-" + id).outerHTML = "";
+}
+
+function clickPress(event) {
+	if (event.keyCode == 13) {
+		addTag();
+	}
+}
+</script>
+
+<div class="column is-6 is-offset-3">
+	<br><br>
+    <h3 class="title">Log In-Person Hours</h3>
+    <form action="/log_in_person" method="post">
+    <div class="box">
+        <p style="border: 1px solid black; margin: 10px; padding: 10px;"><b>IMPORTANT: </b> <i> If you edited someone's essay at the Writing Center in-person, you can log your hours with this form. We will check submissions to verify that they are accurate. You will be penalized if you fake hours you did not actually complete. Thank you! (:</i></p>
+        <br>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Teacher:</label>
+                </div>
+                
+                <div class="field-body">
+                    <div class="field">
+                        <div class="select" style="width: 200%;">
+                            <select name="teacher" style="width: 200%;">
+                                <option selected value>I don't remember</option>
+                                {% for teacher in teachers %}
+                                <option value="{{ teacher }}">{{ teacher }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Course:</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="select" style="width: 200%;">
+                            <select name="course" style="width: 200%;">
+                                <option selected value>I don't remember</option>
+                                {% for course in courses %}
+                                <option value="{{ course }}">{{ course }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <br>
+
+        <div class="field">
+            <p><b>If you remember, please enter the name of the mentee whom you helped:</b></p>
+            <div class="control">
+                <input class="input is-normal" name="name" placeholder="Write here..."></input>
+            </div>
+        </div>
+
+        <br>
+
+
+        <div class="field is-horizontal">
+            <div class="field-label is-normal">
+                <label class="label" style="width: 24vw; text-align: left;">How many hours did you work on this assignment for? Round to the nearest tenth.</label>
+            </div>
+            
+            <div class="field-body">
+                <div class="field has-addons">
+                    <div class="control" style="width: 200%;">
+                        <input class="input is-normal" type="number" step="0.1" name="hours" placeholder="# hours">
+                    </div>
+                    <div class="control">
+                        <a class="button is-static is-normal">
+                            hours
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="tags" id="tagList" value=""></input>
+        <input type="hidden" name="id" value="{{ request.args['id'] }}"></input>
+
+        <br>
+
+        <div class="field">
+        	<p><b>Describe your edits:</b></p>
+        	<div class="control">
+        		<textarea class="textarea" name="help" placeholder="Write here..."></textarea>
+        	</div>
+        </div>
+
+        <label class="checkbox">
+            <input type="checkbox" name="arista">
+            Add credits to my ARISTA account
+        </label>
+
+        <br><br>
+        <button class="button is-block is-info is-large is-fullwidth">Complete Edit</button>
+    </div>
+    </form>
+    <a href="/">
+	    <button class="button is-light" style="background-color: rgb(226, 225, 224);">← Back</button>
+	</a>
+</div>
+
+{% endblock %}

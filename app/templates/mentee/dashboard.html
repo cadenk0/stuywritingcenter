@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% include "mentee/navbar.html" %}
+{% block content %}
+<center>
+	<br><br><br><br><br>
+	<h3 class="title is-3"><i>Welcome back, {{ fname }}</i></h3>
+	<p><i>You have <u>{{ num_active }}</u> ongoing requests</i></p>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="notification is-{{ category }}" onclick="this.style.display='none';" style="width: 20vw; position: fixed; bottom: -0.7vw; right: 1vw; z-index: 100000;">
+                        	<button class="delete"></button>
+                            <center>{{ message }}</center>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+	<hr>
+	<h1 class="title is-3">Current requests:</h1>
+
+	<table class="table is-striped is-bordered" style="width: 100vw;">
+		<tr>
+			<th><i><center>Request ID</center></i></th>
+			<th><i><center>Teacher</center></i></th>
+			<th><i><center>Course</center></i></th>
+			<th><i><center>Details</center></i></th>
+			<th><i><center>Assignment Sheet</center></i></th>
+			<th><i><center>Essay Draft</center></i></th>
+			<th><i><center>Due/Created</center></i></th>
+			<th><i><center>Editor</center></i></th>
+			<th><i><center>Modify</center></i></th>
+		</tr>
+		{% for request in requests[::-1] %}
+			{% if request[2] < 3 %}
+			<tr>
+				<td rowspan="2"><center><i>#{{ request[0] }}</i></center></td>
+				<td rowspan="2">{{ request[10] }}</td>
+				<td rowspan="2">{{ request[9] }}, period {{ request[11] }}</td>
+				<td rowspan="2">{{ request[12] }}</td>
+				<td rowspan="2"><a href="{{ request[14] }}">Link</a></td>
+				<td rowspan="2"><a href="{{ request[15] }}">Link</a></td>
+				<td><b>Due: </b> {{ get_readable_time(request[7]) }}</td>
+
+				<td rowspan="2">
+					{% if request[4] %}
+					{{ get_user(request[4], "editor")[2] }} {{ get_user(request[4], "editor")[3] }}
+					<br>
+					<a href="mailto:{{ request[4] }}@stuy.edu"><b>{{ get_user(request[4], "editor")[2] }} {{ get_user(request[4], "editor")[3] }}</b></a>
+					{% else %}
+					<p color="red"><b>Not matched yet</b></p>
+					{% endif %}
+				</td>
+				<td rowspan="2">
+					{% if request[2] == 0 %}
+					<a href="/delete_entry?id={{ request[1] }}">
+						<button class="button is-danger">Delete</button>
+					</a>
+					{% endif %}
+					{% if request[2] == 1 %}
+						<button class="button is-warning" style="height: 5%;">Currently being edited...</button>
+					{% endif %}
+					{% if request[2] == 2 %}
+						<a href="/feedback?id={{ request[0] }}"><button class="button is-success">Complete Feedback</button></a>
+					{% endif %}
+				</td>
+			</tr>
+			<tr>
+				<td><b>Created: </b> {{ get_readable_time(request[5]) }}</td>
+			</tr>
+			{% endif %}
+		{% endfor %}
+		{% if num_active == 0 %}
+			<td colspan="10">
+				<center>
+					<br>
+					<p><b>No current requests. Created one <a href="http://127.0.0.1:5000/create_piece">here</a>.</b></p>
+					<br>
+				</center>
+			</td>
+		{% endif %}
+	</table>
+
+	<a href="/create_piece">
+		<button class="button is-info" style="height: 5%;"><i class="fa-solid fa-plus"></i>&nbsp;Create Request</button>
+	</a>
+</center>
+<br><br>
+{% endblock %}
