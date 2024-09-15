@@ -1,17 +1,12 @@
 {% extends "base.html" %}
-
 {% block content %}
-
 {% if current_user.usertype == 'mentee' %}
-	{% include "mentee/navbar.html" %}
+{% include "mentee/navbar.html" %}
 {% endif %}
-
 {% if current_user.usertype == 'editor' %}
-	{% include "editor/navbar.html" %}
+{% include "editor/navbar.html" %}
 {% endif %}
-
 <br><br>
-
 <center>
 	<h3 class="title is-3">How to Use</h3>
 	<hr>
@@ -21,7 +16,5 @@
 		<br>
 	<div>
 </center>
-
 <br><br>
-
 {% endblock %}

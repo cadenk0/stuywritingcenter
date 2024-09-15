@@ -2,272 +2,225 @@
 {% include "editor/navbar.html" %}
 {% block content %}
 <div id="myModal" class="modal">
-    <!-- Modal content -->
-    <div class="modal-content">
-        <a onclick="closePopup()"><span class="close">&times;</span></a>
-        <br>
-        <center>
-            <h1 class="title is-3">How to use this website!</h1>
-        </center>
-        <br>
-        <center>
-            <h1 class="title is-3">TK</h1>
-        </center>
-    </div>
+  <div class="modal-content">
+    <a onclick="closePopup()">
+			<span class="close">&times;</span>
+		</a>
+		<br>
+    <center><h1 class="title is-3">How to use this website!</h1></center><br>
+    <center><h1 class="title is-3">TK</h1></center>
+  </div>
 </div>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="notification is-{{ category }}" onclick="this.style.display='none';" style="width: 20vw; position: fixed; bottom: -0.7vw; right: 1vw; z-index: 100000;">
-                        	<button class="delete"></button>
-                            <center>{{ message }}</center>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="notification is-{{ category }}" onclick="this.style.display='none';" style="width: 20vw; position: fixed; bottom: -0.7vw; right: 1vw; z-index: 100000;">
+	<button class="delete"></button>
+	<center>{{ message }}</center>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
 <center>
-    <br><br><br>
-    <h3 class="title is-2" id="welcome"><i><b>Welcome back, {{ fname }} {{ lname }}!</b></i></h3>
-    <h3 class="title is-6">There are currently <u>{{ num_unfulfilled }}</u> articles in the queue that haven't been selected by anyone</h3>
-
-    <hr>
-
-		<table class="table is-striped is-bordered" style="width: 90vw;">
-			<tr>
-				<td colspan="10" style="background-color: lightblue;"><center><h1 class="title is-4"><b>Currently selected</b></h1></center></td>
-			</tr>
-			<tr>
-				<th><i><center>Request ID</center></i></th>
-				<th><i><center>Requester</center></i></th>
-				<th><i><center>Teacher</center></i></th>
-				<th><i><center>Course</center></i></th>
-				<th><i><center>Details</center></i></th>
-				<th><i><center>Assignment Sheet</center></i></th>
-				<th><i><center>Essay Draft</center></i></th>
-				<th><i><center>Due</center></i></th>
-				<th><i><center>Actions/Status</center></i></th>
-			</tr>
-			{% for request in current %}
-				<tr>
-					<td rowspan="2"><i>#{{ request[1] }}</i></td>
-					<td rowspan="2">{{ get_user(request[3], 'mentee')[2] }} {{ get_user(request[3], 'mentee')[3] }} ({{ get_user(request[3], 'mentee')[6] }})<br><a href="mailto:{{ request[3] }}@stuy.edu">{{ request[3] }}@stuy.edu</a></td>
-					<td rowspan="2">{{ request[10] }}</td>
-					<td rowspan="2">{{ request[9] }} (grade {{ get_user(request[3], 'mentee')[4] }}, period {{ request[11] }})</td>
-					<td rowspan="2">
-					{% if request[8] %}
-					<b>MENTEE WOULD LIKE TO MEET IN-PERSON</b><br><br>
-					{% endif %}
-					{{ request[12] }}</td>
-					<td rowspan="2"><a href="{{ request[14] }}">Link</a></td>
-					<td rowspan="2"><a href="{{ request[15] }}">Link</a></td>
-					<td><b>Due:</b> {{ get_readable_time(request[7]) }}</td>
-					<!-- <td>{{ get_readable_time(request[6]) }}</td>
-					<td>{{ get_readable_time(request[5]) }}</td> -->
-					<td rowspan="2">
-						{% if request[2] == 0 %}
-						<a href="/select_entry?id={{ request[1] }}">
-							<button class="button is-info">Select</button>
-						</a>
-						{% endif %}
-						{% if request[2] == 1 %}
-						<a href="/unselect_entry?id={{ request[1] }}">
-							<button class="button is-warning" style="height: 5%;">Unselect</button>
-						</a>
-						<br><br>
-						<a href="/complete_entry?id={{ request[1] }}">
-							<button class="button is-info" style="height: 5%;">Complete</button>
-						</a>
-						{% endif %}
-					</td>
-				</tr>
-				<tr>
-					<td><b>Created:</b> {{ get_readable_time(request[5]) }}</td>
-				</tr>
-			{% endfor %}
-			{% if no_current %}
-				<td colspan="10">
-					<center>
-						<br>
-						<p><b>No current selected requests!</b></p>
-						<br>
-					</center>
-				</td>
+  <br><br><br>
+  <h3 class="title is-2" id="welcome"><i><b>Welcome back, {{ fname }} {{ lname }}!</b></i></h3>
+	<h3 class="title is-6">There are currently <u>{{ num_unfulfilled }}</u> articles in the queue that haven't been selected by anyone</h3>
+	<table class="table is-striped is-bordered" style="width: 90vw;">
+		<tr>
+			<td colspan="10" style="background-color: lightblue;"><center><h1 class="title is-4"><b>Currently selected</b></h1></center></td>
+		</tr>
+		<tr>
+			<th><i><center>Request ID</center></i></th>
+			<th><i><center>Requester</center></i></th>
+			<th><i><center>Teacher</center></i></th>
+			<th><i><center>Course</center></i></th>
+			<th><i><center>Details</center></i></th>
+			<th><i><center>Assignment Sheet</center></i></th>
+			<th><i><center>Essay Draft</center></i></th>
+			<th><i><center>Due</center></i></th>
+			<th><i><center>Actions/Status</center></i></th>
+		</tr>
+		{% for request in current %}
+		<tr>
+			<td rowspan="2"><i>#{{ request[1] }}</i></td>
+			<td rowspan="2">{{ get_user(request[3], 'mentee')[3] }} {{ get_user(request[3], 'mentee')[4] }} ({{ get_user(request[3], 'mentee')[6] }})<br><a href="mailto:{{ request[3] }}@stuy.edu">{{ request[3] }}@stuy.edu</a></td>
+			<td rowspan="2">{{ request[10] }}</td>
+			<td rowspan="2">{{ request[9] }} (grade {{ get_user(request[3], 'mentee')[5] }}, period {{ request[11] }})</td>
+			<td rowspan="2">
+			{% if request[8] %}
+			<b>MENTEE WOULD LIKE TO MEET IN-PERSON</b><br><br>
 			{% endif %}
-		</table>
-
-		<br>
-
-		<table class="table is-striped is-bordered" style="width: 90vw;">
-			<tr>
-				<td colspan="10" style="background-color: lightsalmon;"><center><h1 class="title is-4"><b>Not selected</b></h1></center></td>
-			</tr>
-			<tr>
-				<th><i><center>Request ID</center></i></th>
-				<th><i><center>Requester</center></i></th>
-				<th><i><center>Teacher</center></i></th>
-				<th><i><center>Course</center></i></th>
-				<th><i><center>Details</center></i></th>
-				<th><i><center>Assignment Sheet</center></i></th>
-				<th><i><center>Essay Draft</center></i></th>
-				<th><i><center>Due</center></i></th>
-				<th><i><center>Actions/Status</center></i></th>
-			</tr>
-			{% for request in unselected %}
-				<tr>
-					<td rowspan="2"><i>#{{ request[1] }}</i></td>
-					<td rowspan="2">{{ get_user(request[3], 'mentee')[2] }} {{ get_user(request[3], 'mentee')[3] }} ({{ get_user(request[3], 'mentee')[6] }})<br><a href="mailto:{{ request[3] }}@stuy.edu">{{ request[3] }}@stuy.edu</a></td>
-					<td rowspan="2">{{ request[10] }}</td>
-					<td rowspan="2">{{ request[9] }} (grade {{ get_user(request[3], 'mentee')[4] }}, period {{ request[11] }})</td>
-					<td rowspan="2">
-					{% if request[8] %}
-					<b>MENTEE WOULD LIKE TO MEET IN-PERSON</b><br><br>
-					{% endif %}
-					{{ request[12] }}</td>
-					<td rowspan="2"><a href="{{ request[14] }}">Link</a></td>
-					<td rowspan="2"><a href="{{ request[15] }}">Link</a></td>
-					<td><b>Due:</b> {{ get_readable_time(request[7]) }}</td>
-					<!-- <td>{{ get_readable_time(request[6]) }}</td>
-					<td>{{ get_readable_time(request[5]) }}</td> -->
-					<td rowspan="2">
-						{% if request[2] == 0 %}
-						<a href="/select_entry?id={{ request[1] }}">
-							<button class="button is-info">Select</button>
-						</a>
-						{% endif %}
-						{% if request[2] == 1 %}
-						<a href="/unselect_entry?id={{ request[1] }}">
-							<button class="button is-warning" style="height: 5%;">Unselect</button>
-						</a>
-						<a href="/complete_entry?id={{ request[1] }}">
-							<button class="button is-warning" style="height: 5%;">Complete</button>
-						</a>
-						{% endif %}
-					</td>
-				</tr>
-				<tr>
-					<td><b>Created:</b> {{ get_readable_time(request[5]) }}</td>
-				</tr>
-			{% endfor %}
-			{% if no_unselected %}
-				<td colspan="10">
-					<center>
-						<br>
-						<p><b>No current unselected requests!</b></p>
-						<br>
-					</center>
-				</td>
+			{{ request[12] }}</td>
+			<td rowspan="2"><a href="{{ request[14] }}">Link</a></td>
+			<td rowspan="2"><a href="{{ request[15] }}">Link</a></td>
+			<td><b>Due:</b> {{ get_readable_time(request[7]) }}</td>
+			<td rowspan="2">
+				{% if request[2] == 0 %}
+				<a href="/requests/select_entry?id={{ request[1] }}">
+					<button class="button is-info">Select</button>
+				</a>
+				{% endif %}
+				{% if request[2] == 1 %}
+				<a href="/requests/unselect_entry?id={{ request[1] }}">
+					<button class="button is-warning" style="height: 5%;">Unselect</button>
+				</a>
+				<br/><br/>
+				<a href="/requests/complete_entry?id={{ request[1] }}">
+					<button class="button is-info" style="height: 5%;">Complete</button>
+				</a>
+				{% endif %}
+			</td>
+		</tr>
+		<tr>
+			<td><b>Created:</b> {{ get_readable_time(request[5]) }}</td>
+		</tr>
+		{% endfor %}
+		{% if no_current %}
+		<td colspan="10">
+			<center>
+				<br>
+				<p><b>No current selected requests!</b></p>
+				<br>
+			</center>
+		</td>
+		{% endif %}
+	</table>
+	<br>
+	<table class="table is-striped is-bordered" style="width: 90vw;">
+		<tr>
+			<td colspan="10" style="background-color: lightsalmon;"><center><h1 class="title is-4"><b>Not selected</b></h1></center></td>
+		</tr>
+		<tr>
+			<th><i><center>Request ID</center></i></th>
+			<th><i><center>Requester</center></i></th>
+			<th><i><center>Teacher</center></i></th>
+			<th><i><center>Course</center></i></th>
+			<th><i><center>Details</center></i></th>
+			<th><i><center>Assignment Sheet</center></i></th>
+			<th><i><center>Essay Draft</center></i></th>
+			<th><i><center>Due</center></i></th>
+			<th><i><center>Actions/Status</center></i></th>
+		</tr>
+		{% for request in unselected %}
+		<tr>
+			<td rowspan="2"><i>#{{ request[1] }}</i></td>
+			<td rowspan="2">{{ get_user(request[3], 'mentee')[3] }} {{ get_user(request[3], 'mentee')[4] }} ({{ get_user(request[3], 'mentee')[6] }})<br><a href="mailto:{{ request[3] }}@stuy.edu">{{ request[3] }}@stuy.edu</a></td>
+			<td rowspan="2">{{ request[10] }}</td>
+			<td rowspan="2">{{ request[9] }} (grade {{ get_user(request[3], 'mentee')[4] }}, period {{ request[11] }})</td>
+			<td rowspan="2">
+			{% if request[8] %}
+			<b>MENTEE WOULD LIKE TO MEET IN-PERSON</b><br><br>
 			{% endif %}
-		</table>
-
-		<br>
-
-		<table class="table is-striped is-bordered" style="width: 90vw;">
-			<tr>
-				<td colspan="10" style="background-color: lightgreen;"><center><h1 class="title is-4"><b>Completed</b></h1></center></td>
-			</tr>
-			<tr>
-				<th><i><center>Request ID</center></i></th>
-				<th><i><center>Requester</center></i></th>
-				<th><i><center>Teacher</center></i></th>
-				<th><i><center>Course</center></i></th>
-				<th><i><center>Details</center></i></th>
-				<th><i><center>Assignment Sheet</center></i></th>
-				<th><i><center>Essay Draft</center></i></th>
-				<th><i><center>Due</center></i></th>
-				<th><i><center>Status</center></i></th>
-			</tr>
-			{% for request in finished %}
-				<tr>
-					<td rowspan="2"><i>#{{ request[1] }}</i></td>
-
-					<td rowspan="2">{{ get_user(request[3], 'mentee')[2] }} {{ get_user(request[3], 'mentee')[3] }} ({{ get_user(request[3], 'mentee')[6] }})<br><a href="mailto:{{ request[3] }}@stuy.edu">{{ request[3] }}@stuy.edu</a></td>
-
-					<td rowspan="2">{{ request[10] }}</td>
-
-					<td rowspan="2">{{ request[9] }} (grade {{ get_user(request[3], 'mentee')[4] }}, period {{ request[11] }})</td>
-
-					<td rowspan="2">
-					{{ request[12] }}</td>
-
-					<td rowspan="2"><a href="{{ request[14] }}">Link</a></td>
-					<td rowspan="2"><a href="{{ request[15] }}">Link</a></td>
-					<td><b>Completed:</b> {{ get_readable_time(request[6]) }}</td>
-
-					<td rowspan="2">
-						{% if request[2] == 0 %}
-						<a href="/select_entry?id={{ request[1] }}">
-							<button class="button is-info">Select</button>
-						</a>
-						{% elif request[2] == 1 %}
-						<a href="/unselect_entry?id={{ request[1] }}">
-							<button class="button is-warning" style="height: 5%;">Unselect</button>
-						</a>
-						<br><br>
-						{% elif request[2] == 2 %}
-						<button class="button is-warning" style="height: 14vh;">Awaiting<br>mentee<br>approval</button>
-						{% elif request[2] == 3 %}
-						<center>
-							<br>
-							<p><i style="font-size: 20px; color: green">+ {{ request[16] }} hours received! ✅</i></p>
-						</center>
-						{% endif %}
-					</td>
-				</tr>
-				<tr>
-					<td><b>Created:</b> {{ get_readable_time(request[5]) }}</td>
-				</tr>
-			{% endfor %}
-			{% if no_finished %}
-			<td colspan="10">
-				<center>
-					<br>
-					<p><b>No current completed requests!</b></p>
-					<br>
-				</center>
+			{{ request[12] }}</td>
+			<td rowspan="2"><a href="{{ request[14] }}">Link</a></td>
+			<td rowspan="2"><a href="{{ request[15] }}">Link</a></td>
+			<td><b>Due:</b> {{ get_readable_time(request[7]) }}</td>
+			<td rowspan="2">
+				{% if request[2] == 0 %}
+				<a href="/requests/select_entry?id={{ request[1] }}">
+					<button class="button is-info">Select</button>
+				</a>
+				{% endif %}
+				{% if request[2] == 1 %}
+				<a href="/requests/unselect_entry?id={{ request[1] }}">
+					<button class="button is-warning" style="height: 5%;">Unselect</button>
+				</a>
+				<a href="/requests/complete_entry?id={{ request[1] }}">
+					<button class="button is-warning" style="height: 5%;">Complete</button>
+				</a>
+				{% endif %}
 			</td>
-			{% else %}
-			<td colspan="7">
+		</tr>
+		<tr>
+			<td><b>Created:</b> {{ get_readable_time(request[5]) }}</td>
+		</tr>
+		{% endfor %}
+		{% if no_unselected %}
+		<td colspan="10">
+			<center>
+				<br>
+				<p><b>No current unselected requests!</b></p>
+				<br>
+			</center>
+		</td>
+		{% endif %}
+	</table>
+	<br>
+	<table class="table is-striped is-bordered" style="width: 90vw;">
+		<tr>
+			<td colspan="10" style="background-color: lightgreen;"><center><h1 class="title is-4"><b>Completed</b></h1></center></td>
+		</tr>
+		<tr>
+			<th><i><center>Request ID</center></i></th>
+			<th><i><center>Requester</center></i></th>
+			<th><i><center>Teacher</center></i></th>
+			<th><i><center>Course</center></i></th>
+			<th><i><center>Details</center></i></th>
+			<th><i><center>Assignment Sheet</center></i></th>
+			<th><i><center>Essay Draft</center></i></th>
+			<th><i><center>Due</center></i></th>
+			<th><i><center>Status</center></i></th>
+		</tr>
+		{% for request in finished %}
+		<tr>
+			<td rowspan="2"><i>#{{ request[1] }}</i></td>
+			<td rowspan="2">{{ get_user(request[3], 'mentee')[3] }} {{ get_user(request[3], 'mentee')[4] }} ({{ get_user(request[3], 'mentee')[6] }})<br><a href="mailto:{{ request[3] }}@stuy.edu">{{ request[3] }}@stuy.edu</a></td>
+			<td rowspan="2">{{ request[10] }}</td>
+			<td rowspan="2">{{ request[9] }} (grade {{ get_user(request[3], 'mentee')[5] }}, period {{ request[11] }})</td>
+			<td rowspan="2">{{ request[12] }}</td>
+			<td rowspan="2"><a href="{{ request[14] }}">Link</a></td>
+			<td rowspan="2"><a href="{{ request[15] }}">Link</a></td>
+			<td><b>Completed:</b> {{ get_readable_time(request[6]) }}</td>
+			<td rowspan="2">
+				{% if request[2] == 0 %}
+				<a href="/select_entry?id={{ request[1] }}">
+					<button class="button is-info">Select</button>
+				</a>
+				{% elif request[2] == 1 %}
+				<a href="/unselect_entry?id={{ request[1] }}">
+					<button class="button is-warning" style="height: 5%;">Unselect</button>
+				</a>
+				<br/><br/>
+				{% elif request[2] == 2 %}
+				<button class="button is-warning" style="height: 14vh;">Awaiting<br>mentee<br>approval</button>
+				{% elif request[2] == 3 %}
+				<br/>
+				<center><p><i style="font-size: 20px; color: green">+ {{ request[16] }} hours received! ✅</i></p></center>
+				{% endif %}
 			</td>
-			<td>
-				<center>
-					<p><b>Total Hours Received:</b></p>
-				</center>
-			</td>
-			<td>
-				<center>
-					<p style="font-size: 24px; color: green; margin-top: 5%;"><b>{{ total_hours }} hours</b></p>
-				</center>
-			</td>
-			{% endif %}
-		</table>
-
-    <br>
+		</tr>
+		<tr>
+			<td><b>Created:</b> {{ get_readable_time(request[5]) }}</td>
+		</tr>
+		{% endfor %}
+		{% if no_finished %}
+		<td colspan="10">
+			<center>
+				<br/>
+				<p><b>No current completed requests!</b></p>
+				<br/>
+			</center>
+		</td>
+		{% else %}
+		<td colspan="7"></td>
+		<td><center><p><b>Total Hours Received:</b></p></center></td>
+		<td><center><p style="font-size: 24px; color: green; margin-top: 5%;"><b>{{ total_hours }} hours</b></p></center></td>
+		{% endif %}
+	</table>
+  <br/>
 </center>
 <script>
-    // Get the modal
-    var modal = document.getElementById("myModal");
-    
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
-    
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-    
-    // When the user clicks the button, open the modal 
-    btn.onclick = function() {
-      modal.style.display = "block";
-    }
-    
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-      modal.style.display = "none";
-    }
-    
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
+  var modal = document.getElementById("myModal");
+  var btn = document.getElementById("myBtn");
+  var span = document.getElementsByClassName("close")[0];
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  window.onclick = function(event) {
+    if (event.target == modal) modal.style.display = "none"
+  }
 </script>
 {% endblock %}
